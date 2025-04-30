@@ -47,156 +47,254 @@ public class ScoresDlg extends javax.swing.JDialog {
         dessineResPartG(); // pour dessiner l'histogramme à l'ouverture de la JDialog
     }
     
-    private void dessineResPartG(){ // qui trace l'histogramme des résultats de toutes les parties
-        Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin de l'histo
-        g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
-        // Initialisation des compteurs
-        int nbPGagnéesJ1 = 0; // compte le nombre de parties gagnées par le joueur 1
-        int nbPGagnéesJ2 = 0; // compte le nombre de parties gagnées par le joueur 2
-        int nbPNulles = 0; // compte le nombre de parties nulles
-        for(int i=0; i<lp.getNbPartie(); i++){ // boucle pour remplir les compteurs à partir de toutes les parties enregistrées
-            int res = lp.getPartie(i).getRes(); // récupère le résultat de la partie : 1 = J1 gagné, 2 = J2 gagné, 0 = match nul
-            if(res == 1){
-                nbPGagnéesJ1++; // J1 a gagné
-            }
-            else if(res == 2){
-                nbPGagnéesJ2++; // J2 a gagné
-            }
-            else if(res == 0){
-                nbPNulles++; // Nul
-            }
+private void dessineResPartG(){ // qui trace le camembert des résultats de toutes les parties
+    Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin du camembert
+    g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
+    // Initialisation des compteurs
+    int nbPGagnéesJ1 = 0; // compte le nombre de parties gagnées par le joueur 1
+    int nbPGagnéesJ2 = 0; // compte le nombre de parties gagnées par le joueur 2
+    int nbPNulles = 0; // compte le nombre de parties nulles
+    for(int i=0; i<lp.getNbPartie(); i++){ // boucle pour remplir les compteurs à partir de toutes les parties enregistrées
+        int res = lp.getPartie(i).getRes(); // récupère le résultat de la partie : 1 = J1 gagné, 2 = J2 gagné, 0 = match nul
+        if(res == 1){
+            nbPGagnéesJ1++; // J1 a gagné
         }
-        int[] valeurs = {nbPGagnéesJ1, nbPGagnéesJ2, nbPNulles}; // tableau des valeaurs à afficher
-        String[] labels = {"j1 GAIN", "j2 GAIN", "NUL"}; // message(legende) pour chaque barre
-        Color[] couleurs = {Color.RED, new java.awt.Color(101,52,0), Color.GRAY}; // couleur des barres(on utilise du marron pour le joueur 2)
-        // Calculs pour le bonne affichage de l'histogramme
-        int largRect = PanGraph.getWidth() / 4; // largeur d'une barre (un quart du Panel(PanGraph))
-        int x = 50; // pour le décalage horizontal de départ
-        int hauteurMax = PanGraph.getHeight() - 100; // hauteur maximale utilisable pour les barres
-        int total = lp.getNbPartie(); // nombre total de parties 
-        for(int i=0; i<3; i++){ // Dessin des 3 barres
-            int h = 0;
-            if(total > 0){
-                h = (valeurs[i] * hauteurMax) / total;  // calcul de la hauteur proportionnelle de la barre
-            }
-            else{
-                h = 0; // si aucune partie jouée, hauteur par défaut
-            }
-            if(valeurs[i] == 0){
-                h = 10; // si aucune partie jouée, hauteur par défaut
-            }
-            g.setColor(couleurs[i]); // choix de la couleur pour chaque barre
-            g.fillRect(x + i * largRect, PanGraph.getHeight() - h - 50, largRect - 20, h); // dessine le rectangle(barre)
-            g.setColor(Color.BLACK); // texte en noir
-            g.drawString(labels[i] + " : " + valeurs[i], x + i * largRect, PanGraph.getHeight() - 30); // légende sous la barre
+        else if(res == 2){
+            nbPGagnéesJ2++; // J2 a gagné
+        }
+        else if(res == 0){
+            nbPNulles++; // Nul
         }
     }
     
-    private void dessineResPartJoueur(int indice){ // qui trace l'histogramme des résultats de toutes les parties d'un joueur
-        Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin de l'histo
-        g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
-        Joueur j = lj.getJoueur(indice); // récupère le joueur correspondant à l'index sélectionné
-        int gagnées = 0; 
-        int perdues = 0; 
-        int nulles = 0;
-        for(int i=0; i<lp.getNbPartie(); i++){ // parcours toutes les parties pour calculer les statistiques du joueur
-            Partie p = lp.getPartie(i); // récupère la partie à l'indice i
-            int res = p.getRes(); // résultat de la partie
-            if(j.equals(p.getJ1())){ // si le joueur 1 est dans cette partie
-                if(res == 1){ // Il a gagné
-                    gagnées++;
-                }
-                else if(res == 2){ // Il a perdu
-                    perdues++; 
-                }
-                else if(res == 0){ // Nul
-                    nulles++;
-                }
-            } 
-            else if(j.equals(p.getJ2())){ // si le joueur est le joueur 2
-                if(res == 2){ // Il a gagné
-                    gagnées++;
-                }
-                else if(res == 1){ // Il a perdu
-                    perdues++;
-                }
-                else if(res == 0){ // Nul
-                    nulles++;
-                }
-            }
-        }
-        int total = gagnées + perdues + nulles; // nombre total de parties jouées
-        if(total == 0){ // si aucune partie joué
-            g.setColor(Color.BLACK); // texte en noir
-            g.drawString("Aucune partie à afficher", 50, PanGraph.getHeight() / 2); // on affiche ce message
-        }
-        else{
-            int largRect = PanGraph.getWidth() / 4; // largeur d'une barre (un quart du Panel(PanGraph))
-            int x = 50; // pour le décalage horizontal de départ
-            int hauteurMax = PanGraph.getHeight() - 100; // hauteur maximale utilisable pour les barres
-            int[] valeurs = {gagnées, nulles, perdues}; // tableau des valeaurs à afficher
-            String[] labels = {"Gagnées", "Nulles", "Perdues"}; // message(legende) pour chaque barre
-            Color[] couleurs = {Color.GREEN, Color.ORANGE, Color.RED}; // couleur des barres
-            for(int i = 0; i < 3; i++){ // dessin des 3 barres
-                int h = 0;
-                if(valeurs[i] == 0){ // si pas de victoire ou perte ou nul
-                    h = 10; // hauteur par défaut de 10 pixels
-                }  
-                else{
-                    h = (valeurs[i] * hauteurMax / total); // calcul de la hauteur proportionnelle de la barre
-                }
-                g.setColor(couleurs[i]); // choix de la couleur pour chaque barre
-                g.fillRect(x + i * largRect, PanGraph.getHeight() - h - 50, largRect - 20, h); // dessine le rectangle(barre)
-                g.setColor(Color.BLACK); // texte en noir
-                g.drawString(labels[i] + " : " + valeurs[i], x + i * largRect, PanGraph.getHeight() - 30); // légende sous la barre
-            }
-        }
-    }
+    int total = nbPGagnéesJ1 + nbPGagnéesJ2 + nbPNulles;
+    int[] valeurs = {nbPGagnéesJ1, nbPGagnéesJ2, nbPNulles}; // tableau des valeurs à afficher
+    String[] labels = {"Joueur 1 victoires", "Joueur 2 victoires", "Matchs nuls"}; // message(legende) pour chaque secteur
+    Color[] couleurs = {Color.RED, new java.awt.Color(101,52,0), Color.GRAY}; // couleur des secteurs (on utilise du marron pour le joueur 2)
     
-    private void dessinePourcentageVictoire(int index){ // qui trace le pourcentage de victoire d'un joueur par rapport à ses parties jouées 
-        Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin de l'histo
-        g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
-        Joueur j = lj.getJoueur(index); // récupère le joueur sélectionné
-        int gagnées = 0; // nombre de victoires
-        int total = 0; // nombre total de parties jouées par ce joueur
-        for(int i=0; i<lp.getNbPartie(); i++) { // on parcourt toutes les parties enregistrées du joueur
-            Partie p = lp.getPartie(i); // récupère la partie d'indice i
-            int res = p.getRes(); // récupère le résultat de cette partie
-            if(j.equals(p.getJ1())){ // si le joueur est le joueur 1
-                total++; // il a joué cette partie donc on augmente son nombres de parties jouées
-                if(res == 1){ // et s'il a gagné on augmente son nombre de victoire
-                    gagnées++; 
-                }
-            }
-            else if(j.equals(p.getJ2())){ // Sinon si le joueur est le joueur 2
-                total++; // il a joué cette partie donc on augmente son nombres de parties jouées
-                if(res == 2){ // et s'il a gagné on augmente son nombre de victoire
-                    gagnées++;
-                }
+    // CORRECTION: Calculs pour le bon affichage du camembert avec des dimensions adaptées
+    int panelWidth = PanGraph.getWidth();
+    int panelHeight = PanGraph.getHeight();
+    
+    // Réduire la taille du camembert pour laisser de la place à la légende
+    int diametre = Math.min(panelWidth / 2, panelHeight) - 20; 
+    int x = 20; // position x fixée à gauche avec une marge
+    int y = (panelHeight - diametre) / 2; // position y centrée
+    
+    if (total > 0) {
+        int startAngle = 0;
+        for (int i = 0; i < valeurs.length; i++) {
+            if (valeurs[i] > 0) { // On ne dessine que si la valeur est > 0
+                int arcAngle = (int) Math.round((double) valeurs[i] * 360 / total);
+                g.setColor(couleurs[i]);
+                g.fillArc(x, y, diametre, diametre, startAngle, arcAngle);
+                startAngle += arcAngle;
             }
         }
-        // initialisation des variables pour le dessin
-        int pourcentage = 0;
-        int hauteur = 0;
-        if(total == 0){ // si aucune partie n'est jouée par le joueur
-            g.setColor(Color.BLACK); // texte en noir
-            g.drawString("Aucune partie à afficher", 50, PanGraph.getHeight() / 2); // // on affiche ce message au centre du panneau
+        
+        // CORRECTION: Repositionner la légende sur le côté avec assez d'espace
+        int legendX = x + diametre + 30; // augmenter l'espacement entre camembert et légende
+        int legendY = y;
+        
+        // Titre de la légende
+        g.setColor(Color.BLACK);
+        Font defaultFont = g.getFont();
+        Font boldFont = new Font(defaultFont.getName(), Font.BOLD, 14);
+        g.setFont(boldFont);
+        g.drawString("Légende", legendX, legendY);
+        g.setFont(defaultFont);
+        
+        // Contenu de la légende avec espacement vertical amélioré
+        for (int i = 0; i < valeurs.length; i++) {
+            g.setColor(couleurs[i]);
+            g.fillRect(legendX, legendY + 25 + i * 30, 15, 15); // Augmenter l'espacement vertical
+            g.setColor(Color.BLACK);
+            g.drawString(labels[i] + " : " + valeurs[i], legendX + 25, legendY + 25 + i * 30 + 12);
+        }
+        
+        // Ajouter le nombre total de parties avec un meilleur espacement
+        g.drawString("Total des parties : " + total, legendX, legendY + 25 + valeurs.length * 30 + 20);
+    } else {
+        // Si aucune partie n'a été jouée
+        g.setColor(Color.BLACK);
+        g.drawString("Aucune partie à afficher", panelWidth / 2 - 80, panelHeight / 2);
+    }
+}
+
+// Méthode corrigée pour dessineResPartJoueur
+private void dessineResPartJoueur(int indice){ // qui trace le camembert des résultats de toutes les parties d'un joueur
+    Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin du camembert
+    g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
+    Joueur j = lj.getJoueur(indice); // récupère le joueur correspondant à l'index sélectionné
+    int gagnées = 0; 
+    int perdues = 0; 
+    int nulles = 0;
+    for(int i=0; i<lp.getNbPartie(); i++){ // parcours toutes les parties pour calculer les statistiques du joueur
+        Partie p = lp.getPartie(i); // récupère la partie à l'indice i
+        int res = p.getRes(); // résultat de la partie
+        if(j.equals(p.getJ1())){ // si le joueur 1 est dans cette partie
+            if(res == 1){ // Il a gagné
+                gagnées++;
+            }
+            else if(res == 2){ // Il a perdu
+                perdues++; 
+            }
+            else if(res == 0){ // Nul
+                nulles++;
+            }
         } 
-        else{
-            pourcentage = (int) ((gagnées * 100.0) / total); // calcul du pourcentage
-            int hauteurMax = PanGraph.getHeight() - 100; // hauteur maximale utilisable pour la barre
-            hauteur = (pourcentage * hauteurMax) / 100; // calcul de la hauteur proportionnelle de la barre
-            if(pourcentage == 0){ // si aucune victoire
-                hauteur = 10; // petite barre visible de 10 pixels
+        else if(j.equals(p.getJ2())){ // si le joueur est le joueur 2
+            if(res == 2){ // Il a gagné
+                gagnées++;
             }
-            int largRect = PanGraph.getWidth() / 3; // largeur de la barre (un tiers du Panel(PanGraph))
-            int x = (PanGraph.getWidth() - largRect) / 2; // pour le centrage horizontal
-            g.setColor(Color.CYAN); // on fixe la couleur de la barre par du cyan
-            g.fillRect(x, PanGraph.getHeight() - hauteur - 50, largRect, hauteur); // dessine le rectangle(barre)
-            g.setColor(Color.BLACK); // texte en noir
-            g.drawString("Victoire: " + pourcentage + "%", x + 10, PanGraph.getHeight() - 30); // affiche le pourcentage(légeznde)
+            else if(res == 1){ // Il a perdu
+                perdues++;
+            }
+            else if(res == 0){ // Nul
+                nulles++;
+            }
         }
     }
+    
+    int total = gagnées + perdues + nulles; // nombre total de parties jouées
+    
+    if(total == 0){ // si aucune partie jouée
+        g.setColor(Color.BLACK); // texte en noir
+        g.drawString("Aucune partie à afficher", PanGraph.getWidth() / 2 - 80, PanGraph.getHeight() / 2); // on affiche ce message
+    } else {
+        int[] valeurs = {gagnées, nulles, perdues}; // tableau des valeurs à afficher
+        String[] labels = {"Parties gagnées", "Parties nulles", "Parties perdues"}; // message(legende) pour chaque secteur
+        Color[] couleurs = {Color.GREEN, Color.ORANGE, Color.RED}; // couleur des secteurs
+        
+        // CORRECTION: Calculs pour le bon affichage du camembert
+        int panelWidth = PanGraph.getWidth();
+        int panelHeight = PanGraph.getHeight();
+        
+        int diametre = Math.min(panelWidth / 2, panelHeight) - 20; // Diamètre réduit du camembert
+        int x = 20; // position x fixée à gauche
+        int y = (panelHeight - diametre) / 2; // position y centrée
+        
+        int startAngle = 0;
+        for (int i = 0; i < valeurs.length; i++) {
+            if (valeurs[i] > 0) { // On ne dessine que si la valeur est > 0
+                int arcAngle = (int) Math.round((double) valeurs[i] * 360 / total);
+                g.setColor(couleurs[i]);
+                g.fillArc(x, y, diametre, diametre, startAngle, arcAngle);
+                startAngle += arcAngle;
+            }
+        }
+        
+        // CORRECTION: Repositionner la légende sur le côté droit
+        int legendX = x + diametre + 30;
+        int legendY = y;
+        
+        // Titre de la légende
+        g.setColor(Color.BLACK);
+        Font defaultFont = g.getFont();
+        Font boldFont = new Font(defaultFont.getName(), Font.BOLD, 14);
+        g.setFont(boldFont);
+        g.drawString("Légende", legendX, legendY);
+        g.setFont(defaultFont);
+        
+        // Contenu de la légende avec espacement vertical amélioré
+        for (int i = 0; i < valeurs.length; i++) {
+            g.setColor(couleurs[i]);
+            g.fillRect(legendX, legendY + 25 + i * 30, 15, 15); // Augmenter l'espacement vertical
+            g.setColor(Color.BLACK);
+            g.drawString(labels[i] + " : " + valeurs[i], legendX + 25, legendY + 25 + i * 30 + 12);
+        }
+        
+        // Ajouter le nombre total de parties avec un meilleur espacement
+        g.drawString("Total des parties : " + total, legendX, legendY + 25 + valeurs.length * 30 + 20);
+    }
+}
+
+// Méthode corrigée pour dessinePourcentageVictoire
+private void dessinePourcentageVictoire(int index){ // qui trace le pourcentage de victoire d'un joueur par rapport à ses parties jouées 
+    Graphics g = PanGraph.getGraphics(); // Graphics contient les méthodes de dessin et PanGraph JPanel de dessin
+    g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight()); // efface la zone de dessin
+    Joueur j = lj.getJoueur(index); // récupère le joueur sélectionné
+    int gagnées = 0; // nombre de victoires
+    int total = 0; // nombre total de parties jouées par ce joueur
+    for(int i=0; i<lp.getNbPartie(); i++) { // on parcourt toutes les parties enregistrées du joueur
+        Partie p = lp.getPartie(i); // récupère la partie d'indice i
+        int res = p.getRes(); // récupère le résultat de cette partie
+        if(j.equals(p.getJ1())){ // si le joueur est le joueur 1
+            total++; // il a joué cette partie donc on augmente son nombres de parties jouées
+            if(res == 1){ // et s'il a gagné on augmente son nombre de victoire
+                gagnées++; 
+            }
+        }
+        else if(j.equals(p.getJ2())){ // Sinon si le joueur est le joueur 2
+            total++; // il a joué cette partie donc on augmente son nombres de parties jouées
+            if(res == 2){ // et s'il a gagné on augmente son nombre de victoire
+                gagnées++;
+            }
+        }
+    }
+    
+    if(total == 0){ // si aucune partie n'est jouée par le joueur
+        g.setColor(Color.BLACK); // texte en noir
+        g.drawString("Aucune partie à afficher", PanGraph.getWidth() / 2 - 80, PanGraph.getHeight() / 2); // on affiche ce message au centre du panneau
+    } else {
+        int pourcentage = (int) ((gagnées * 100.0) / total); // calcul du pourcentage
+        int perdues = total - gagnées; // nombre de parties non gagnées
+        
+        // CORRECTION: Calculs pour le bon affichage du camembert
+        int panelWidth = PanGraph.getWidth();
+        int panelHeight = PanGraph.getHeight();
+        
+        int diametre = Math.min(panelWidth / 2, panelHeight) - 20; // Diamètre réduit
+        int x = 20; // position x fixée à gauche
+        int y = (panelHeight - diametre) / 2; // position y centrée
+        
+        // Dessiner le camembert avec deux secteurs : victoires et défaites/nulles
+        Color[] couleurs = {Color.CYAN, Color.LIGHT_GRAY};
+        String[] labels = {"Victoires", "Défaites/Nulles"};
+        int[] valeurs = {gagnées, perdues};
+        
+        // Dessiner le camembert
+        int startAngle = 0;
+        for (int i = 0; i < valeurs.length; i++) {
+            if (valeurs[i] > 0) {
+                int arcAngle = (int) Math.round((double) valeurs[i] * 360 / total);
+                g.setColor(couleurs[i]);
+                g.fillArc(x, y, diametre, diametre, startAngle, arcAngle);
+                startAngle += arcAngle;
+            }
+        }
+        
+        // CORRECTION: Dessiner la légende sur le côté droit avec un meilleur espacement
+        int legendX = x + diametre + 30;
+        int legendY = y;
+        
+        // Titre de la légende
+        g.setColor(Color.BLACK);
+        Font defaultFont = g.getFont();
+        Font boldFont = new Font(defaultFont.getName(), Font.BOLD, 14);
+        g.setFont(boldFont);
+        g.drawString("Légende", legendX, legendY);
+        g.setFont(defaultFont);
+        
+        // Contenu de la légende avec espacement vertical amélioré
+        for (int i = 0; i < valeurs.length; i++) {
+            g.setColor(couleurs[i]);
+            g.fillRect(legendX, legendY + 25 + i * 30, 15, 15); // Augmenter l'espacement vertical
+            g.setColor(Color.BLACK);
+            if (i == 0) {
+                g.drawString(labels[i] + " : " + pourcentage + "%", legendX + 25, legendY + 25 + i * 30 + 12);
+            } else {
+                g.drawString(labels[i] + " : " + (100 - pourcentage) + "%", legendX + 25, legendY + 25 + i * 30 + 12);
+            }
+        }
+        
+        // Ajouter des informations supplémentaires avec un meilleur espacement
+        g.drawString("Total : " + total, legendX, legendY + 25 + valeurs.length * 30 + 20);
+        g.drawString("Victoires : " + gagnées, legendX, legendY + 25 + valeurs.length * 30 + 40);
+    }
+}
+   
+       
 
     /**
      * This method is called from within the constructor to initialize the form.

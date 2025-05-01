@@ -9,7 +9,7 @@ import javax.swing.DefaultListModel;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class ClassementDlg extends javax.swing.JDialog {
     private LesJoueurs lesJo;

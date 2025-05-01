@@ -8,17 +8,20 @@ import javax.swing.DefaultListModel;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class SelectionJoueursDlg extends javax.swing.JDialog {
     
     private Joueur joueur1;
     private Joueur joueur2;
-    private LesJoueurs lj;
+    private final LesJoueurs lj;
     private boolean ok;
     
     /**
      * Creates new form SelectionJoueursDlg
+     * @param parent
+     * @param modal
+     * @param lj
      */
     public SelectionJoueursDlg(java.awt.Frame parent, boolean modal, LesJoueurs lj) {
         super(parent, modal);

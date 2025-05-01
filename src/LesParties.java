@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class LesParties {
     private ArrayList<Partie>lstp; // Pour gérer l'ensemble des parties

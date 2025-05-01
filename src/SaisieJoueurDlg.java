@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class SaisieJoueurDlg extends javax.swing.JDialog {
     //attributs

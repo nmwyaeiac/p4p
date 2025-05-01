@@ -5,10 +5,10 @@
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class Jeu {
-    private Plateau platJeu;
+    private final Plateau platJeu;
     
     public Jeu(){
         this.platJeu = new Plateau(); // créer un nouveau plateau 

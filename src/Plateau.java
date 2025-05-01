@@ -5,7 +5,7 @@
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class Plateau {
     private Case tab[][]; //matrice de Case 4x4 -> pour représenter l'état du jeu

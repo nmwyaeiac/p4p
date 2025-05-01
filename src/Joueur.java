@@ -1,14 +1,17 @@
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
-import java.io.*;
 
+/**
+ *
+ * @author wassil
+ */
 
 public class Joueur {
     private String pseudo;
     private ImageIcon photo; 
     private int niveau; 
-    private ArrayList<Joueur> adversaires; 
-    private ArrayList<Integer> resultats; 
+    private final ArrayList<Joueur> adversaires; 
+    private final ArrayList<Integer> resultats; 
      
 
    public Joueur() {
@@ -116,7 +119,8 @@ public class Joueur {
     public void ajouterResultat(Joueur adv, int res, int niv) {
         this.adversaires.add(adv);
         this.resultats.add(res);
-        this.niveau = niv+1;
+        if(this.niveau<10)
+            this.niveau = niv+1;
     }
 
     @Override
@@ -130,15 +134,9 @@ public class Joueur {
             int res = this.resultats.get(i);
              s += "partie jouée contre "+j.pseudo+" ";
             switch (res) {
-                case 1:
-                    s += "gagné";
-                    break;
-                case 0:
-                    s += "nul";
-                    break;
-                case -1:
-                    s += "perdu";
-                    break;
+                case 1 -> s += "gagné";
+                case 0 -> s += "nul";
+                case -1 -> s += "perdu";
             }
         s += "\n";
         }

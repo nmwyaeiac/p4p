@@ -2,22 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-import java.io.*;
-import java.awt.event.ActionEvent;
-import javax.swing.ImageIcon;
-import javax.swing.*;
-import java.awt.*;
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class VisuJoueurDlg extends javax.swing.JDialog {
     //attributs
-    private LesJoueurs lj; // tous les joueurs
+    private final LesJoueurs lj; // tous les joueurs
     private Joueur joueurCourant; // celui dont les infos sont afficher le 1er au départ
-    private PanneauImage panPhoto; // on ajoute un PanneauImage pour un meilleur affichage de la photo à la place d'un bouton
+    private final PanneauImage panPhoto; // on ajoute un PanneauImage pour un meilleur affichage de la photo à la place d'un bouton
     /**
      * Creates new form VisuJoueurDlg
+     * @param parent
+     * @param modal
+     * @param llj
      */
     // constructeur
     public VisuJoueurDlg(java.awt.Frame parent, boolean modal, LesJoueurs llj) {

@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import java.io.*;
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class LesJoueurs {
     private ArrayList<Joueur> lstj;

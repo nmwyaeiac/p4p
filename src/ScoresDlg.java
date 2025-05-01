@@ -8,15 +8,16 @@ import javax.swing.ImageIcon;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class ScoresDlg extends javax.swing.JDialog {
-    private LesJoueurs lj; // attribut de type LesJoueurs pour stocker la liste des joueurs 
-    private LesParties lp; // attribut de type LesParties pour stocker la liste des parties jouées
-    private PanneauImage panImage; // on créer un PanneauImage pour un bonne affichage des Images
+    private final LesJoueurs lj; // attribut de type LesJoueurs pour stocker la liste des joueurs 
+    private final LesParties lp; // attribut de type LesParties pour stocker la liste des parties jouées
+    private final PanneauImage panImage; // on créer un PanneauImage pour un bonne affichage des Images
 
     /**
      * Creates new form ScoresDlg
+     * 
      */
     public ScoresDlg(java.awt.Frame parent, boolean modal, LesJoueurs lj, LesParties lp){
         super(parent, modal);
@@ -144,14 +145,15 @@ private void dessineResPartJoueur(int indice){ // qui trace le camembert des ré
             }
         } 
         else if(j.equals(p.getJ2())){ // si le joueur est le joueur 2
-            if(res == 2){ // Il a gagné
-                gagnées++;
-            }
-            else if(res == 1){ // Il a perdu
-                perdues++;
-            }
-            else if(res == 0){ // Nul
-                nulles++;
+            switch (res) {
+                case 2 -> // Il a gagné
+                    gagnées++;
+                case 1 -> // Il a perdu
+                    perdues++;
+                case 0 -> // Nul
+                    nulles++;
+                default -> {
+                }
             }
         }
     }

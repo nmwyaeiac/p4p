@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class Case {
     private ArrayList<Integer>pions;

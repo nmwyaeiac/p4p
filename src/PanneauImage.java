@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class PanneauImage extends javax.swing.JPanel {
     private Image img; // stocke l'image à afficher dans le panneau

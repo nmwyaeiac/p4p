@@ -9,6 +9,8 @@ public class P4P extends javax.swing.JFrame {
 
     /**
      * Creates new form P4P
+     * 
+     * @author wassil
      */
     
     private LesJoueurs listeJ; // liste de tous les joueurs

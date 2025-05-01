@@ -5,7 +5,7 @@
 
 /**
  *
- * @author zeelu
+ * @author wassil
  */
 public class Partie {
     private Joueur j1; // Joueur 1 de la partie

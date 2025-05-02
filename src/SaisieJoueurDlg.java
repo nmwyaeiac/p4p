@@ -13,10 +13,10 @@ import java.awt.*;
  */
 public class SaisieJoueurDlg extends javax.swing.JDialog {
     //attributs
-    private Joueur nj; //nouveau
+    private final Joueur nj; //nouveau
     private boolean ok; //Valide=true Annuler = False
     private ImageIcon photo;
-    private BoutonImage boutonImage; // pour afficher la photo du joueur dans un BouttonImage (bouton)
+    private final BoutonImage boutonImage; // pour afficher la photo du joueur dans un BouttonImage (bouton)
     /**
      * Creates new form SaisieJoueurDlg
      */

@@ -4,16 +4,16 @@
  */
 import java.util.*;
 import javax.swing.ImageIcon;
-import java.io.*;
+
 /**
  *
  * @author wassil
  */
 public class LesJoueurs {
-    private ArrayList<Joueur> lstj;
+    private final ArrayList<Joueur> lstj;
     
     public LesJoueurs(){
-        this.lstj = new ArrayList<Joueur>();
+        this.lstj = new ArrayList<>();
     }
     public Joueur getJoueur(int i){
         if(this.lstj.get(i)!=null){
@@ -147,6 +147,7 @@ public class LesJoueurs {
         }  
     }
     
+    @Override
     public String toString(){
         String s = " ";
         for(int i = 0; i<this.lstj.size();i++){

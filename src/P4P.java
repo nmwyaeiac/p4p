@@ -5,7 +5,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
-public class P4P extends javax.swing.JFrame {
+public final class P4P extends javax.swing.JFrame {
 
     /**
      * Creates new form P4P
@@ -13,13 +13,13 @@ public class P4P extends javax.swing.JFrame {
      * @author wassil
      */
     
-    private LesJoueurs listeJ; // liste de tous les joueurs
-    private LesParties lp; // liste de toutes les parties
+    private final LesJoueurs listeJ; // liste de tous les joueurs
+    private final LesParties lp; // liste de toutes les parties
     private Joueur joueur1;
     private Joueur joueur2;
-    private Jeu lejeu;
+    private final Jeu lejeu;
     private int joueurCourant; // numéro du joueur courant vaut 1 pour joueur1 et 2 pour joueur2 
-    private Plateau PJeu;
+    private final Plateau PJeu;
     private int nbgj1; // nombre de galets du joueur 1
     private int nbgj2; // nombre de galets du joueur 2
     private int xsel, ysel; // indices de la case sélectionnée par un joueur lors de son tour de jeu, case où il dépose son pion
@@ -31,8 +31,8 @@ public class P4P extends javax.swing.JFrame {
     private boolean selection; // indicateur pour savoir si c'est le début du tour d'un joueur, ou en cours d'égrainage
     private boolean finPartie; // indicateur pour savoir si la partie est terminée
     // On remplace le JPanel par PanneauImage pour le redimensionnement
-    private PanneauImage panPhotoJ1;
-    private PanneauImage panPhotoJ2;
+    private final PanneauImage panPhotoJ1;
+    private final PanneauImage panPhotoJ2;
     
     public P4P(){
         initComponents();

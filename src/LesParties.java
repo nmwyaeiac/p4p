@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author wassil
  */
 public class LesParties {
-    private ArrayList<Partie>lstp; // Pour gérer l'ensemble des parties
+    private final ArrayList<Partie>lstp; // Pour gérer l'ensemble des parties
     
     public LesParties(){
         this.lstp = new ArrayList<>();

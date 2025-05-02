@@ -1,6 +1,7 @@
 import java.awt.*;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
@@ -30,6 +31,7 @@ public class ScoresDlg extends javax.swing.JDialog {
         panImage = new PanneauImage(); // création du nouveau PanneauImage(panImage)
         PImage.add(panImage); // ajoute le Panneau Image au Panel PPhoto
         panImage.setImage(img); // on ajoute l'image par défaut pour montrer que personne n'est sélectionné
+        ChoixGraph.addItem("Statistiques Avancées");
     }
     
     private void initNomJoueurs(){ // rempli la JList(NomJoueurs) avec les pseudos de tout les joueurs
@@ -296,7 +298,201 @@ private void dessinePourcentageVictoire(int index){ // qui trace le pourcentage 
     }
 }
    
-       
+     /**
+ * Méthode pour afficher les statistiques avancées d'un joueur
+ * @param index indice du joueur dont on veut afficher les statistiques
+ */
+/**
+ * Méthode pour afficher les statistiques avancées d'un joueur
+ * @param index indice du joueur dont on veut afficher les statistiques
+ */
+private void dessineStatistiquesAvancees(int index) {
+    Graphics g = PanGraph.getGraphics();
+    g.clearRect(0, 0, PanGraph.getWidth(), PanGraph.getHeight());
+    
+    Joueur j = lj.getJoueur(index);
+    
+    // Calculs des statistiques 
+    int victoires = 0;
+    int defaites = 0;
+    int nulles = 0;
+    int totalCoups = 0;
+    int nbParties = 0;
+    int plusLongueSerieVictoires = 0;
+    int serieVictoireActuelle = 0;
+    int partiesContreDifficulte1 = 0;
+    int partiesContreDifficulte5plus = 0;
+    int victoiresContreDifficulte1 = 0;
+    int victoiresContreDifficulte5plus = 0;
+    
+    // Parcourir toutes les parties
+    for(int i=0; i<lp.getNbPartie(); i++) {
+        Partie p = lp.getPartie(i);
+        boolean estPartieDuJoueur = false;
+        boolean victoire = false;
+        
+        if(j.equals(p.getJ1())) {
+            estPartieDuJoueur = true;
+            if(p.getRes() == 1) {
+                victoires++;
+                victoire = true;
+            } else if(p.getRes() == 2) {
+                defaites++;
+            } else {
+                nulles++;
+            }
+            
+            int niveauAdversaire = p.getJ2().getNiveau();
+            if(niveauAdversaire == 1) {
+                partiesContreDifficulte1++;
+                if(p.getRes() == 1) victoiresContreDifficulte1++;
+            } else if(niveauAdversaire >= 5) {
+                partiesContreDifficulte5plus++;
+                if(p.getRes() == 1) victoiresContreDifficulte5plus++;
+            }
+        } else if(j.equals(p.getJ2())) {
+            estPartieDuJoueur = true;
+            if(p.getRes() == 2) {
+                victoires++;
+                victoire = true;
+            } else if(p.getRes() == 1) {
+                defaites++;
+            } else {
+                nulles++;
+            }
+            
+            int niveauAdversaire = p.getJ1().getNiveau();
+            if(niveauAdversaire == 1) {
+                partiesContreDifficulte1++;
+                if(p.getRes() == 2) victoiresContreDifficulte1++;
+            } else if(niveauAdversaire >= 5) {
+                partiesContreDifficulte5plus++;
+                if(p.getRes() == 2) victoiresContreDifficulte5plus++;
+            }
+        }
+        
+        if(estPartieDuJoueur) {
+            nbParties++;
+            totalCoups += p.getNbCoups();
+            
+            if(victoire) {
+                serieVictoireActuelle++;
+                if(serieVictoireActuelle > plusLongueSerieVictoires) {
+                    plusLongueSerieVictoires = serieVictoireActuelle;
+                }
+            } else {
+                serieVictoireActuelle = 0;
+            }
+        }
+    }
+    
+    // Calcul des statistiques dérivées
+    double ratioVictoiresDefaites = defaites == 0 ? victoires : (double) victoires / defaites;
+    double moyenneCoups = nbParties == 0 ? 0 : (double) totalCoups / nbParties;
+    double tauxVictoireDebutants = partiesContreDifficulte1 == 0 ? 0 : (double) victoiresContreDifficulte1 / partiesContreDifficulte1 * 100;
+    double tauxVictoireExperts = partiesContreDifficulte5plus == 0 ? 0 : (double) victoiresContreDifficulte5plus / partiesContreDifficulte5plus * 100;
+    
+    // Préparation de l'affichage
+    g.setColor(Color.BLACK);
+    Font defaultFont = g.getFont();
+    Font titleFont = new Font(defaultFont.getName(), Font.BOLD, 16);
+    Font sectionFont = new Font(defaultFont.getName(), Font.BOLD, 14);
+    
+    int yPos = 30;
+    int xPos = 20;
+    int lineHeight = 20;
+    int sectionSpacing = 10;
+    
+    // Titre
+    g.setFont(titleFont);
+    g.drawString("Statistiques avancées pour " + j.getPseudo(), xPos, yPos);
+    yPos += lineHeight + sectionSpacing;
+    
+    // Performance générale
+    g.setFont(sectionFont);
+    g.drawString("Performance générale", xPos, yPos);
+    yPos += lineHeight;
+    g.setFont(defaultFont);
+    g.drawString("Parties: " + nbParties + " (V: " + victoires + ", D: " + defaites + ", N: " + nulles + ")", xPos, yPos);
+    yPos += lineHeight;
+    g.drawString("Ratio V/D: " + String.format("%.2f", ratioVictoiresDefaites), xPos, yPos);
+    yPos += lineHeight;
+    g.drawString("Plus longue série de victoires: " + plusLongueSerieVictoires, xPos, yPos);
+    yPos += lineHeight;
+    g.drawString("Moyenne de coups par partie: " + String.format("%.1f", moyenneCoups), xPos, yPos);
+    yPos += lineHeight + sectionSpacing;
+    
+    // Performance contre différents niveaux
+    g.setFont(sectionFont);
+    g.drawString("Performance par niveau d'adversaire", xPos, yPos);
+    yPos += lineHeight;
+    g.setFont(defaultFont);
+    g.drawString("Contre débutants (niveau 1): " + 
+                String.format("%.1f", tauxVictoireDebutants) + "% de victoires", xPos, yPos);
+    yPos += lineHeight;
+    g.drawString("Contre experts (niveau 5+): " + 
+                String.format("%.1f", tauxVictoireExperts) + "% de victoires", xPos, yPos);
+    yPos += lineHeight + sectionSpacing;
+    
+    // Niveau actuel et progression
+    g.setFont(sectionFont);
+    g.drawString("Niveau et progression", xPos, yPos);
+    yPos += lineHeight;
+    g.setFont(defaultFont);
+    g.drawString("Niveau actuel: " + j.getNiveau(), xPos, yPos);
+    yPos += lineHeight;
+    
+    // Graphique de progression du niveau simplifié et corrigé
+    g.drawString("Progression du niveau (simulation):", xPos, yPos);
+    yPos += lineHeight;
+    
+    int graphWidth = PanGraph.getWidth() - 40;
+    int graphHeight = 60;
+    
+    // Fond du graphique
+    g.setColor(Color.LIGHT_GRAY);
+    g.fillRect(xPos, yPos, graphWidth, graphHeight);
+    g.setColor(Color.BLACK);
+    g.drawRect(xPos, yPos, graphWidth, graphHeight);
+    
+    // Variables pour les barres
+    int barWidth = 25;
+    int gap = 5;
+    int totalWidth = 10 * barWidth + 9 * gap; // 10 barres + 9 espaces
+    int startBarX = xPos + (graphWidth - totalWidth) / 2;
+    int niveau = j.getNiveau();
+    
+    // Dessiner les barres
+    for(int i = 0; i < 10; i++) {
+        int barX = startBarX + i * (barWidth + gap);
+        int barHeight = 0;
+        
+        if(i < niveau) {
+            barHeight = graphHeight - 10; // Barre complète
+        } else if(i == niveau) {
+            barHeight = (int)((graphHeight - 10) * 0.7); // Barre partielle
+        }
+        
+        if(barHeight > 0) {
+            g.setColor(new Color(65, 105, 225)); // Bleu
+            g.fillRect(barX, yPos + graphHeight - barHeight - 5, barWidth, barHeight);
+            g.setColor(Color.BLACK);
+            g.drawRect(barX, yPos + graphHeight - barHeight - 5, barWidth, barHeight);
+        }
+    }
+    
+    // Légende des niveaux
+    yPos += graphHeight + lineHeight;
+    
+    // Numéros de niveau (1-10) placés sous les barres
+    for(int i = 0; i < 10; i++) {
+        int numX = startBarX + i * (barWidth + gap) + barWidth/2 - 3;
+        g.drawString(String.valueOf(i+1), numX, yPos);
+    }
+    
+    yPos += lineHeight;
+    g.drawString("Niveau", xPos + graphWidth/2 - 20, yPos);
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -399,31 +595,34 @@ private void dessinePourcentageVictoire(int index){ // qui trace le pourcentage 
 
     private void BVisualiserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BVisualiserActionPerformed
         // TODO add your handling code here:
-        int ind = this.NomJoueurs.getSelectedIndex(); // récupère l'index du joueur sélectionné
-        if(ind>=0){ // si un joueur est sélectionné on continue
-            panImage.setImage(this.lj.getJoueur(ind).getPhoto().getImage()); // affiche sa photo dans le PanneauImage(panImage)
-            String choix = (String) ChoixGraph.getSelectedItem(); // récupère le choix du graphique à partir de la JComboBox(ChoixGraph)
-            if(choix.equals("Resultat des Parties")){ // selon le choix, on trace le graphique correspondant
-                dessineResPartJoueur(ind);
-            } 
-            else if(choix.equals("Pourcentage de Victoire")){
-                dessinePourcentageVictoire(ind);
-            }
-        }
+      int ind = this.NomJoueurs.getSelectedIndex();
+    if(ind>=0){
+        panImage.setImage(this.lj.getJoueur(ind).getPhoto().getImage());
+        String choix = (String) ChoixGraph.getSelectedItem();
+          switch (choix) {
+              case "Resultat des Parties" -> dessineResPartJoueur(ind);
+              case "Pourcentage de Victoire" -> dessinePourcentageVictoire(ind);
+              case "Statistiques Avancées" -> dessineStatistiquesAvancees(ind);
+              default -> {
+              }
+          }
+    }
     }//GEN-LAST:event_BVisualiserActionPerformed
 
     private void ChoixGraphActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChoixGraphActionPerformed
-        // TODO add your handling code here:
-        int ind = this.NomJoueurs.getSelectedIndex(); // récupère l'index du joueur sélectionné
-        if(ind>=0){ // si un joueur est sélectionné on continue
-            String choix = (String) ChoixGraph.getSelectedItem(); // récupère le choix du graphique à partir de la JComboBox(ChoixGraph)
-            if(choix.equals("Resultat des Parties")){ // selon le choix, on trace le graphique correspondant
-                dessineResPartJoueur(ind); // affiche l'histogramme des résultats
-            }
-            else if(choix.equals("Pourcentage de Victoire")){
-                dessinePourcentageVictoire(ind); // affiche l'histogramme du pourcentage
-            }
+     int ind = this.NomJoueurs.getSelectedIndex();
+    if(ind>=0){
+        String choix = (String) ChoixGraph.getSelectedItem();
+        if(choix.equals("Resultat des Parties")){
+            dessineResPartJoueur(ind);
         }
+        else if(choix.equals("Pourcentage de Victoire")){
+            dessinePourcentageVictoire(ind);
+        }
+        else if(choix.equals("Statistiques Avancées")){
+            dessineStatistiquesAvancees(ind);
+        }
+    }
     }//GEN-LAST:event_ChoixGraphActionPerformed
 
     /**
